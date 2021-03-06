@@ -11,12 +11,12 @@ UPLOAD_FOLDER = f'{os.getcwd()}/uploaded_files'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('src/config.ini')
 
 
 def get_files(request):
     Result = utilities.ValidateArgs(request, "user")
-    return Result
+    return utilities.BuildResponse(Result, 200)
 
 
 @app.route('/files')
@@ -30,7 +30,7 @@ def handle_files():
         return get_files(request)
     else:
         logging.error("Unsupported Method")
-        return "Method unsupported"
+        return utilities.BuildResponse("Unsupported type", 500)
 
 
 if __name__ == "__main__":

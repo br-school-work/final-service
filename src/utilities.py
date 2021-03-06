@@ -1,4 +1,5 @@
 from flask.globals import request
+import json
 
 
 def ValidateArgs(args, key):
@@ -15,3 +16,10 @@ def ValidateArgs(args, key):
         return request.args['user']
     else:
         return "Invalid query"
+
+
+def BuildResponse(msg, code):
+    data = {}
+    data['code'] = code
+    data['msg'] = msg
+    return json.dumps(data)
