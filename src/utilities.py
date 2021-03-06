@@ -32,7 +32,7 @@ def BuildResponse(msg, code):
     data = {}
     data['code'] = code
     data['msg'] = msg
-    return json.dumps(data)
+    return json.dumps(data), code
 
 
 def GenerateUUID():

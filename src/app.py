@@ -36,10 +36,10 @@ def handle_files():
         # check if the post request has the file part
         if 'file' not in request.files:
             print(request.files)
-            return utilities.BuildResponse("Invalid request", 500)
+            return utilities.BuildResponse("Invalid request", 400)
         file = request.files['file']
         if file.filename == '':
-            return utilities.BuildResponse("File data is empty", 500)
+            return utilities.BuildResponse("File data is empty", 400)
         if file and allowed_file(file.filename):
             path = os.path.join(
                 app.config['UPLOAD_FOLDER'], file.filename)
