@@ -16,7 +16,7 @@ config.read('src/config.ini')
 
 def get_files(request):
     Result = utilities.ValidateArgs(request, "user")
-    return utilities.BuildResponse(Result, 200)
+    return Result
 
 
 @app.route('/files')
@@ -27,7 +27,8 @@ def handle_files():
        Data to requester
     """
     if request.method == "GET":
-        return get_files(request)
+        Result = get_files(request)
+        return utilities.BuildResponse(Result, 200)
     else:
         logging.error("Unsupported Method")
         return utilities.BuildResponse("Unsupported type", 500)
