@@ -8,10 +8,16 @@ import logging
 
 app = Flask(__name__)
 UPLOAD_FOLDER = f'{os.getcwd()}/uploaded_files'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 config = configparser.ConfigParser()
 config.read('src/config.ini')
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def get_files(request):
@@ -19,14 +25,27 @@ def get_files(request):
     return Result
 
 
-@app.route('/files')
+@app.route('/files', methods=['GET', 'POST'])
 def handle_files():
     """Handles incoming requests to /files api
 
     Returns:
        Data to requester
     """
-    if request.method == "GET":
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            print(request.files)
+            return utilities.BuildResponse("Invalid request", 500)
+        file = request.files['file']
+        if file.filename == '':
+            return utilities.BuildResponse("File data is empty", 500)
+        if file and allowed_file(file.filename):
+            path = os.path.join(
+                app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(path)
+            return utilities.BuildResponse("Upload complete", 200)
+    elif request.method == "GET":
         Result = get_files(request)
         return utilities.BuildResponse(Result, 200)
     else:

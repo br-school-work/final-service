@@ -1,5 +1,6 @@
 from flask.globals import request
 import json
+import uuid
 
 
 def ValidateArgs(args, key):
@@ -32,3 +33,7 @@ def BuildResponse(msg, code):
     data['code'] = code
     data['msg'] = msg
     return json.dumps(data)
+
+
+def GenerateUUID():
+    return uuid.uuid4()
