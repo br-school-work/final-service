@@ -19,6 +19,15 @@ def ValidateArgs(args, key):
 
 
 def BuildResponse(msg, code):
+    """Builds json response to requester
+
+    Args:
+        msg (string): message body
+        code (int): status code
+
+    Returns:
+        json: built json body with code and msg
+    """
     data = {}
     data['code'] = code
     data['msg'] = msg
