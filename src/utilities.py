@@ -34,6 +34,14 @@ def BuildResponse(msg, code):
     data['msg'] = msg
     return json.dumps(data), code
 
+def BuildResponsePOST(msg, code, subID):
+
+    data = {}
+    data['code'] = code
+    data['msg'] = msg
+    data['id'] = subID
+    return json.dumps(data), code
+
 
 def GenerateUUID():
     return uuid.uuid4()

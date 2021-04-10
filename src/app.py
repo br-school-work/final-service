@@ -9,7 +9,7 @@ import logging
 app = Flask(__name__)
 UPLOAD_FOLDER = f'{os.getcwd()}/uploaded_files'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 config = configparser.ConfigParser()
 config.read('src/config.ini')
@@ -44,7 +44,8 @@ def handle_files():
             path = os.path.join(
                 app.config['UPLOAD_FOLDER'], file.filename)
             file.save(path)
-            return utilities.BuildResponse("Upload complete", 200)
+            id = redis_client.CreateImage(path)
+            return utilities.BuildResponsePOST("Upload complete", 200, id)
     elif request.method == "GET":
         Result = get_files(request)
         return utilities.BuildResponse(Result, 200)
@@ -61,7 +62,7 @@ if __name__ == "__main__":
         app.run(debug=True)
     elif config["debug"]["enabled"] == "0":
         logging.info("Started in release mode")
-        app.run(debug=False)
+        app.run(debug=True, port=3818)
     else:
         logging.error("Invalid debug setting"),
         exit(1)
