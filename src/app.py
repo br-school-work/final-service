@@ -20,9 +20,10 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def get_files(request):
-    Result = utilities.ValidateArgs(request, "user")
-    return Result
+def get_files(id):
+    result = redis_client.GetPath(id)
+    print(result)
+    return result
 
 
 @app.route('/files', methods=['GET', 'POST'])
@@ -47,11 +48,25 @@ def handle_files():
             id = redis_client.CreateImage(path)
             return utilities.BuildResponsePOST("Upload complete", 200, id)
     elif request.method == "GET":
-        Result = get_files(request)
+        if 'id' not in request.args:
+            print(request.files)
+            return utilities.BuildResponse("Invalid request", 400)
+        Result = get_files(request.args['id'])
         return utilities.BuildResponse(Result, 200)
     else:
         logging.error("Unsupported Method")
         return utilities.BuildResponse("Unsupported type", 500)
+
+@app.route('/point', methods=['GET', 'POST'])
+def handle_points():
+    """Handles incoming requests for setting and gettings points of an image
+    """
+    if request.method == 'POST':
+        redis_client.SetPoints(int(request.args['id']), int(request.args['value']))
+        return utilities.BuildResponse('ok', 200)
+    if request.method == 'GET':
+        Points = redis_client.GetPoints(request.args['id'])
+        return utilities.BuildResponse(Points, 200)
 
 
 if __name__ == "__main__":

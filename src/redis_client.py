@@ -20,3 +20,17 @@ def CreateImage(path):
 
     return id
 
+def SetPoints(id, point):
+    pointIndex = f'I/{id}'
+    result = client.set(pointIndex, point)
+    return int(result)
+
+def GetPath(id):
+    pathIndex = f'P/{id}'
+    result = client.get(pathIndex)
+    return result
+
+def GetPoints(id):
+    pointIndex = f'I/{id}'
+    result = client.get(pointIndex)
+    return int(result)
