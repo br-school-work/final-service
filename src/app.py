@@ -25,6 +25,9 @@ def get_files(id):
     print(result)
     return result
 
+@app.route('/form', methods=['GET'])
+def form_handle():
+    return """<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd7kPTVHy8y7jVi25GXdS04K4LX1z3epg2E4cZ5zJgFyG6Siw/viewform?embedded=true" width="640" height="403" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>"""
 
 @app.route('/files', methods=['GET', 'POST'])
 def handle_files():
